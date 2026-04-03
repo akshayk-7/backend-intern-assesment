@@ -19,7 +19,8 @@ I used a cloud-hosted Neon PostgreSQL database to make testing easy. You don't n
 
 ## API Endpoints Overview
 
-You can view and test all endpoints visually by going to `http://localhost:5000/api-docs` (Swagger UI) after starting the server.
+Swagger documentation is available at: http://localhost:5000/api-docs
+(Swagger UI) after starting the server.
 
 **Users**
 *   `POST /api/users` - Create a new user

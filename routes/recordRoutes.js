@@ -3,6 +3,36 @@ const router = express.Router();
 const recordController = require('../controllers/recordController');
 const { checkRole } = require('../middleware/roleMiddleware');
 
+// swagger documentation for the records routes
+/**
+ * @swagger
+ * tags:
+ *   name: Records
+ *   description: API to manage financial entries
+ * 
+ * /api/records:
+ *   get:
+ *     summary: Retrieve financial records
+ *     tags: [Records]
+ *     security:
+ *       - roleHeader: []
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *         description: Filter by income or expense
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search description or category
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of data
+ */
+
+
 // All 3 role can read records
 router.get('/', checkRole(['viewer', 'analyst', 'admin']), recordController.getRecords);
 

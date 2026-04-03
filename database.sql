@@ -23,5 +23,6 @@ CREATE TABLE financial_records (
     category VARCHAR(50) NOT NULL,
     description TEXT,
     date DATE NOT NULL DEFAULT CURRENT_DATE,
+    deleted_at TIMESTAMP DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

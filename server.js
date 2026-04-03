@@ -4,7 +4,8 @@ require('dotenv').config();
 const userRoutes = require('./routes/userRoutes');
 const recordRoutes = require('./routes/recordRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
-
+const swaggerSpec = require('./config/swagger');
+const swaggerUi = require('swagger-ui-express');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -16,6 +17,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/records', recordRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
+// API Documentation Route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/api/health', (req, res) => {
     res.status(200).json({

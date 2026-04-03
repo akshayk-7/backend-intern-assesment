@@ -1,11 +1,12 @@
 const db = require('../config/db');
 
-// get records with filtering
+// get records with filtering, search, pagination
+
 const getRecords = async (req, res) => {
     try {
-        const { type, category, startDate, endDate } = req.query;
+        const { type, category, startDate, endDate, search, page = 1, limit = 10 } = req.query;
 
-        let queryStr = 'SELECT * FROM financial_records WHERE 1=1';
+        let queryStr = 'SELECT * FROM financial_records WHERE deleted_at IS NULL';
         let queryParams = [];
         let paramsIndex = 1;
 
@@ -23,23 +24,36 @@ const getRecords = async (req, res) => {
         }
         // Date filtering
         if (startDate) {
-            queryStr += `AND date >= $${paramsIndex}`;
+            queryStr += ` AND date >= $${paramsIndex}`;
             queryParams.push(startDate);
             paramsIndex++;
         }
 
         if (endDate) {
-            queryStr += `AND date <= $${paramsIndex}`;
+            queryStr += ` AND date <= $${paramsIndex}`;
             queryParams.push(endDate);
+            paramsIndex++;
+        }
+
+        // Search functionality
+        if (search) {
+            queryStr += ` AND (description ILIKE $${paramsIndex} OR category ILIKE $${paramsIndex})`;
+            queryParams.push(`%${search}%`);
             paramsIndex++;
         }
 
         queryStr += ' ORDER BY date DESC';
 
+        // Pagination Functionality
+        const offset = (page - 1) * limit;
+        queryStr += ` LIMIT $${paramsIndex} OFFSET $${paramsIndex + 1}`;
+        queryParams.push(limit, offset);
+
         const result = await db.query(queryStr, queryParams);
         res.status(200).json({
             status: 'success',
-            results: result.rowCount,
+            page: Number(page),
+            results_on_page: result.rowCount,
             data: result.rows
         });
     } catch (error) {
@@ -130,13 +144,29 @@ const updateRecord = async (req, res) => {
     }
 };
 
-
+// Soft delete an existing financial record
 const deleteRecord = async (req, res) => {
     try {
         const { id } = req.params;
-        await db.query('DELETE FROM financial_records WHERE id = $1', [id]);
-        //204 status code means no content
-        res.status(204).send();
+
+        // Soft Delete : instead of using 'DELETE FROM' i have used 'UPDATE' to set a hidden timestamp
+
+        const result = await db.query(
+            'UPDATE financial_records SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING id',
+            [id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Record not found.'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Record deleted successfully.'
+        });
     } catch (error) {
         res.status(500).json({
             status: 'error',

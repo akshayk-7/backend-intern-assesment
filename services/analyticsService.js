@@ -8,18 +8,21 @@ const getDashboardSummary = async () => {
         COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END),0) AS total_income,
         COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END),0) AS total_expense,
         COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END),0) AS net_balance
-    FROM financial_records
+    FROM financial_records 
+    WHERE deleted_at IS NULL
     `;
 
     const categoryQuery = `
     SELECT category, type, SUM(amount) AS total
     FROM financial_records
+    WHERE deleted_at IS NULL
     GROUP BY category, type
     ORDER BY total DESC
     `;
 
     const recentQuery = `
     SELECT * FROM financial_records
+    WHERE deleted_at IS NULL
     ORDER BY date DESC
     LIMIT 5
     `;

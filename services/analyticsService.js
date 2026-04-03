@@ -21,17 +21,19 @@ const getDashboardSummary = async () => {
     const recentQuery = `
     SELECT * FROM financial_records
     ORDER BY date DESC
-    LIMIT 
-    `
+    LIMIT 5
+    `;
 
-    const [summaryResult, categoryResult] = await Promise.all([
+    const [summaryResult, categoryResult, recentResult] = await Promise.all([
         db.query(summaryQuery),
-        db.query(categoryQuery)
+        db.query(categoryQuery),
+        db.query(recentQuery)
     ]);
 
     return {
         overview: summaryResult.rows[0],
-        breakdownList: categoryResult.rows
+        breakdownList: categoryResult.rows,
+        recentActivity: recentResult.rows
     };
 };
 

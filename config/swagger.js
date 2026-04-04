@@ -10,8 +10,13 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:5000',
+                url: 'https://finance-dashboard-api-e13h.onrender.com',
+                description: 'Production server'
             },
+            {
+                url: 'http://localhost:5000',
+                description: 'Local server'
+            }
         ],
         components: {
             securitySchemes: {

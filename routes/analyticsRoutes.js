@@ -3,7 +3,7 @@ const router = express.Router();
 const analyticsController = require('../controllers/analyticsController');
 const { checkRole } = require('../middleware/roleMiddleware');
 
-// swagger API Documentation
+// swagger UI API Documentation
 /**
  * @swagger
  * tags:

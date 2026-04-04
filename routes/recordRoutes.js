@@ -3,7 +3,7 @@ const router = express.Router();
 const recordController = require('../controllers/recordController');
 const { checkRole } = require('../middleware/roleMiddleware');
 
-// swagger documentation for the records routes
+// swagger UI API documentation for the records routes
 /**
  * @swagger
  * tags:
@@ -27,9 +27,86 @@ const { checkRole } = require('../middleware/roleMiddleware');
  *         schema:
  *           type: string
  *         description: Search description or category
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of records per page
  *     responses:
  *       200:
  *         description: Successful retrieval of data
+ * 
+ *   post:
+ *     summary: Create a new financial record
+ *     tags: [Records]
+ *     security:
+ *       - roleHeader: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id: { type: string, example: "paste-user-id-here" }
+ *               amount: { type: number, example: 500 }
+ *               type: { type: string, enum: [income, expense] }
+ *               category: { type: string, example: "Freelance" }
+ *               description: { type: string, example: "Side project" }
+ *               date: { type: string, format: date }
+ *     responses:
+ *       201:
+ *         description: Successfully created record
+ * 
+ * /api/records/{id}:
+ *   put:
+ *     summary: Update an existing record
+ *     tags: [Records]
+ *     security:
+ *       - roleHeader: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               amount: { type: number, example: 750 }
+ *               type: { type: string, enum: [income, expense] }
+ *               category: { type: string, example: "Bonus" }
+ *               description: { type: string, example: "Year end bonus" }
+ *               date: { type: string, format: date }
+ *     responses:
+ *       200:
+ *         description: Successfully updated record
+ * 
+ *   delete:
+ *     summary: Soft delete a record
+ *     tags: [Records]
+ *     security:
+ *       - roleHeader: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully deleted record
  */
 
 

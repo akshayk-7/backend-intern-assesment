@@ -26,3 +26,4 @@ CREATE TABLE financial_records (
     deleted_at TIMESTAMP DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+

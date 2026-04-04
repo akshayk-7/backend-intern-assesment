@@ -19,7 +19,9 @@ I used a cloud-hosted Neon PostgreSQL database to make testing easy. You don't n
 
 ## API Endpoints Overview
 
-Swagger documentation is available at: http://localhost:5000/api-docs
+Swagger documentation is available at: 
+Local: http://localhost:5000/api-docs
+Deployed: https://finance-dashboard-api-e13h.onrender.com/api-docs
 (Swagger UI) after starting the server.
 
 **Users**
